@@ -279,7 +279,7 @@
         /* Combination Grid */
         .combinations-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
             gap: 2rem;
         }
 
@@ -320,27 +320,29 @@
 
         .combo-images {
             display: flex;
-            height: 350px;
+            min-height: 500px;
             position: relative;
         }
 
         .combo-body {
-            position: absolute;
-            left: 0;
-            top: 0;
             width: 40%;
-            height: 100%;
+            min-height: 500px;
             object-fit: cover;
-            opacity: 0.3;
-            filter: grayscale(50%);
+            object-position: top;
+            border-right: 1px solid var(--border);
+            flex-shrink: 0;
         }
 
         .combo-outfit {
             display: flex;
             flex-direction: column;
-            width: 100%;
+            flex: 1;
             position: relative;
             z-index: 1;
+        }
+
+        .combo-outfit.full-width {
+            width: 100%;
         }
 
         .combo-top, .combo-bottom {
@@ -350,6 +352,7 @@
             justify-content: center;
             padding: 1rem;
             position: relative;
+            min-height: 220px;
         }
 
         .combo-top {
@@ -361,8 +364,8 @@
         }
 
         .combo-top img, .combo-bottom img {
-            max-width: 80%;
-            max-height: 100%;
+            max-width: 90%;
+            max-height: 190px;
             object-fit: contain;
             border-radius: 12px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
@@ -374,7 +377,7 @@
         }
 
         .combo-footer {
-            padding: 1.5rem;
+            padding: 1rem 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -1037,7 +1040,7 @@
                         ${rankClass ? `<div class="combo-rank ${rankClass}">#${idx + 1}</div>` : ''}
                         <div class="combo-images">
                             ${state.body ? `<img src="${state.body}" class="combo-body" alt="Body">` : ''}
-                            <div class="combo-outfit">
+                            <div class="combo-outfit ${!state.body ? 'full-width' : ''}">
                                 <div class="combo-top">
                                     <img src="${combo.top}" alt="Top ${combo.topIndex + 1}">
                                 </div>
