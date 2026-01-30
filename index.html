@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Style Remix | Fashion Combinator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a24;
+            --accent-hot: #ff2d55;
+            --accent-cool: #5e5ce6;
+            --accent-gold: #ffd60a;
+            --text-primary: #ffffff;
+            --text-secondary: #8e8e93;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(94, 92, 230, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(255, 45, 85, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(255, 214, 10, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-family: 'Dela Gothic One', cursive;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            background: linear-gradient(135deg, var(--accent-hot), var(--accent-cool), var(--accent-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Upload Section */
+        .upload-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+            animation: fadeIn 0.8s ease-out 0.2s both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .upload-box {
+            background: var(--bg-card);
+            border: 2px dashed var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-box::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--accent-cool), var(--accent-hot));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .upload-box:hover {
+            border-color: var(--accent-cool);
+            transform: translateY(-4px);
+        }
+
+        .upload-box:hover::before {
+            opacity: 0.05;
+        }
+
+        .upload-box.body-upload { border-color: var(--accent-gold); }
+        .upload-box.tops-upload { border-color: var(--accent-hot); }
+        .upload-box.bottoms-upload { border-color: var(--accent-cool); }
+
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .upload-title {
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .upload-count {
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background: var(--glass);
+            border-radius: 50px;
+            display: inline-block;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Thumbnail Preview */
+        .thumbnail-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            justify-content: center;
+        }
+
+        .thumbnail {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 2px solid var(--border);
+            cursor: grab;
+            transition: all 0.2s ease;
+        }
+
+        .thumbnail:hover {
+            transform: scale(1.1);
+            border-color: var(--accent-gold);
+        }
+
+        .thumbnail.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+
+        /* Action Buttons */
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            animation: fadeIn 0.8s ease-out 0.4s both;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-hot), var(--accent-cool));
+            color: white;
+            box-shadow: 0 4px 20px rgba(255, 45, 85, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(255, 45, 85, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--glass);
+            border-color: var(--accent-cool);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Combination Display */
+        .combinations-section {
+            animation: fadeIn 0.8s ease-out 0.6s both;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .section-title {
+            font-family: 'Dela Gothic One', cursive;
+            font-size: 1.8rem;
+        }
+
+        .combo-stats {
+            display: flex;
+            gap: 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stat-value {
+            color: var(--accent-gold);
+            font-weight: 600;
+        }
+
+        /* Combination Grid */
+        .combinations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .combo-card {
+            background: var(--bg-card);
+            border-radius: 24px;
+            overflow: hidden;
+            position: relative;
+            transition: all 0.4s ease;
+            animation: cardIn 0.5s ease-out both;
+        }
+
+        @keyframes cardIn {
+            from { opacity: 0; transform: scale(0.9) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .combo-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .combo-rank {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: var(--bg-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            z-index: 2;
+        }
+
+        .combo-rank.gold { background: linear-gradient(135deg, #ffd60a, #ff9500); color: #000; }
+        .combo-rank.silver { background: linear-gradient(135deg, #c0c0c0, #a0a0a0); color: #000; }
+        .combo-rank.bronze { background: linear-gradient(135deg, #cd7f32, #8b4513); color: #fff; }
+
+        .combo-images {
+            display: flex;
+            height: 350px;
+            position: relative;
+        }
+
+        .combo-body {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 40%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.3;
+            filter: grayscale(50%);
+        }
+
+        .combo-outfit {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .combo-top, .combo-bottom {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            position: relative;
+        }
+
+        .combo-top {
+            background: linear-gradient(180deg, rgba(255, 45, 85, 0.1), transparent);
+        }
+
+        .combo-bottom {
+            background: linear-gradient(0deg, rgba(94, 92, 230, 0.1), transparent);
+        }
+
+        .combo-top img, .combo-bottom img {
+            max-width: 80%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .combo-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+        }
+
+        .combo-footer {
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .combo-id {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .vote-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .vote-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .vote-btn.upvote {
+            background: rgba(52, 199, 89, 0.2);
+            color: #34c759;
+        }
+
+        .vote-btn.upvote:hover, .vote-btn.upvote.active {
+            background: #34c759;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .vote-btn.downvote {
+            background: rgba(255, 45, 85, 0.2);
+            color: var(--accent-hot);
+        }
+
+        .vote-btn.downvote:hover, .vote-btn.downvote.active {
+            background: var(--accent-hot);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .vote-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--bg-primary);
+            padding: 0.2rem 0.5rem;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        /* Playground Section */
+        .playground {
+            background: var(--bg-secondary);
+            border-radius: 24px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            border: 1px solid var(--border);
+        }
+
+        .playground-title {
+            font-family: 'Dela Gothic One', cursive;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .playground-area {
+            display: grid;
+            grid-template-columns: 1fr 300px 1fr;
+            gap: 2rem;
+            min-height: 500px;
+        }
+
+        .item-pool {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .pool-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pool-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            min-height: 200px;
+        }
+
+        .pool-item {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            object-fit: cover;
+            cursor: grab;
+            border: 2px solid var(--border);
+            transition: all 0.2s ease;
+        }
+
+        .pool-item:hover {
+            transform: scale(1.05);
+            border-color: var(--accent-gold);
+        }
+
+        .pool-item.dragging {
+            opacity: 0.5;
+        }
+
+        .mannequin {
+            background: var(--bg-card);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 2px solid var(--border);
+        }
+
+        .mannequin-header {
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+            background: var(--glass);
+        }
+
+        .drop-zone {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            border: 2px dashed transparent;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .drop-zone.top-zone {
+            background: linear-gradient(180deg, rgba(255, 45, 85, 0.05), transparent);
+        }
+
+        .drop-zone.bottom-zone {
+            background: linear-gradient(0deg, rgba(94, 92, 230, 0.05), transparent);
+        }
+
+        .drop-zone.drag-over {
+            border-color: var(--accent-gold);
+            background: rgba(255, 214, 10, 0.1);
+        }
+
+        .drop-zone img {
+            max-width: 90%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .drop-placeholder {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        /* Leaderboard */
+        .leaderboard {
+            background: var(--bg-secondary);
+            border-radius: 24px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            border: 1px solid var(--border);
+        }
+
+        .leaderboard-title {
+            font-family: 'Dela Gothic One', cursive;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .leaderboard-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-card);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .leaderboard-item:hover {
+            transform: translateX(8px);
+        }
+
+        .leaderboard-position {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .leaderboard-position.pos-1 { background: linear-gradient(135deg, #ffd60a, #ff9500); color: #000; }
+        .leaderboard-position.pos-2 { background: linear-gradient(135deg, #c0c0c0, #808080); color: #000; }
+        .leaderboard-position.pos-3 { background: linear-gradient(135deg, #cd7f32, #8b4513); color: #fff; }
+        .leaderboard-position.pos-other { background: var(--glass); color: var(--text-secondary); }
+
+        .leaderboard-preview {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .leaderboard-preview img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .leaderboard-info {
+            flex: 1;
+        }
+
+        .leaderboard-combo-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .leaderboard-votes {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .leaderboard-score {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+        }
+
+        /* Hidden file inputs */
+        input[type="file"] {
+            display: none;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .playground-area {
+                grid-template-columns: 1fr;
+            }
+            
+            .mannequin {
+                order: -1;
+                min-height: 400px;
+            }
+        }
+
+        /* Toast notifications */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--bg-card);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            transition: transform 0.4s ease;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Progress bar for generation */
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background: var(--bg-card);
+            border-radius: 2px;
+            margin-top: 1rem;
+            overflow: hidden;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-hot), var(--accent-cool));
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    
+    <div class="container">
+        <header>
+            <h1>✨ Style Remix</h1>
+            <p class="subtitle">Upload your wardrobe, discover winning combinations</p>
+        </header>
+
+        <!-- Upload Section -->
+        <div class="upload-section">
+            <div class="upload-box body-upload" onclick="document.getElementById('bodyInput').click()">
+                <span class="upload-icon">🧍</span>
+                <div class="upload-title">Full Body Photo</div>
+                <div class="upload-desc">Upload a full-body reference photo</div>
+                <div class="upload-count" id="bodyCount">0 / 1 uploaded</div>
+                <div class="thumbnail-grid" id="bodyThumbnails"></div>
+                <input type="file" id="bodyInput" accept="image/*" onchange="handleUpload(event, 'body')">
+            </div>
+
+            <div class="upload-box tops-upload" onclick="document.getElementById('topsInput').click()">
+                <span class="upload-icon">👕</span>
+                <div class="upload-title">Upper Body Clothes</div>
+                <div class="upload-desc">Upload up to 16 tops, shirts, jackets</div>
+                <div class="upload-count" id="topsCount">0 / 16 uploaded</div>
+                <div class="thumbnail-grid" id="topsThumbnails"></div>
+                <input type="file" id="topsInput" accept="image/*" multiple onchange="handleUpload(event, 'tops')">
+            </div>
+
+            <div class="upload-box bottoms-upload" onclick="document.getElementById('bottomsInput').click()">
+                <span class="upload-icon">👖</span>
+                <div class="upload-title">Lower Body Pants</div>
+                <div class="upload-desc">Upload up to 3 pants, skirts, shorts</div>
+                <div class="upload-count" id="bottomsCount">0 / 3 uploaded</div>
+                <div class="thumbnail-grid" id="bottomsThumbnails"></div>
+                <input type="file" id="bottomsInput" accept="image/*" multiple onchange="handleUpload(event, 'bottoms')">
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="actions">
+            <button class="btn btn-primary" id="generateBtn" onclick="generateCombinations()" disabled>
+                🎲 Generate All Combinations
+            </button>
+            <button class="btn btn-secondary" onclick="clearAll()">
+                🗑️ Clear All
+            </button>
+            <button class="btn btn-secondary" onclick="sortByVotes()">
+                📊 Sort by Votes
+            </button>
+        </div>
+
+        <!-- Playground Section -->
+        <div class="playground" id="playground" style="display: none;">
+            <div class="playground-title">🎨 Mix & Match Playground</div>
+            <div class="playground-area">
+                <div class="item-pool">
+                    <div class="pool-title">👕 Tops</div>
+                    <div class="pool-items" id="topsPool"></div>
+                </div>
+                
+                <div class="mannequin">
+                    <div class="mannequin-header">Your Look</div>
+                    <div class="drop-zone top-zone" id="topDropZone" ondragover="handleDragOver(event)" ondrop="handleDrop(event, 'top')" ondragleave="handleDragLeave(event)">
+                        <div class="drop-placeholder">Drag a top here</div>
+                    </div>
+                    <div class="drop-zone bottom-zone" id="bottomDropZone" ondragover="handleDragOver(event)" ondrop="handleDrop(event, 'bottom')" ondragleave="handleDragLeave(event)">
+                        <div class="drop-placeholder">Drag pants here</div>
+                    </div>
+                </div>
+
+                <div class="item-pool">
+                    <div class="pool-title">👖 Bottoms</div>
+                    <div class="pool-items" id="bottomsPool"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Leaderboard -->
+        <div class="leaderboard" id="leaderboard" style="display: none;">
+            <div class="leaderboard-title">🏆 Top Combinations</div>
+            <div class="leaderboard-list" id="leaderboardList"></div>
+        </div>
+
+        <!-- Combinations Grid -->
+        <div class="combinations-section" id="combinationsSection" style="display: none;">
+            <div class="section-header">
+                <h2 class="section-title">All Combinations</h2>
+                <div class="combo-stats">
+                    <div class="stat">
+                        <span>Total:</span>
+                        <span class="stat-value" id="totalCombos">0</span>
+                    </div>
+                    <div class="stat">
+                        <span>Voted:</span>
+                        <span class="stat-value" id="votedCombos">0</span>
+                    </div>
+                </div>
+            </div>
+            <div class="combinations-grid" id="combinationsGrid"></div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState">
+            <div class="empty-icon">📸</div>
+            <h3>Upload your wardrobe to get started</h3>
+            <p>Add a body photo, some tops, and pants to see all possible outfit combinations</p>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // State management
+        const state = {
+            body: null,
+            tops: [],
+            bottoms: [],
+            combinations: [],
+            votes: {} // { comboId: { up: 0, down: 0, userVote: null } }
+        };
+
+        const MAX_TOPS = 16;
+        const MAX_BOTTOMS = 3;
+
+        // Handle file uploads
+        function handleUpload(event, type) {
+            event.stopPropagation();
+            const files = Array.from(event.target.files);
+            
+            if (type === 'body') {
+                if (files.length > 0) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        state.body = e.target.result;
+                        updateUI();
+                        showToast('Body photo uploaded! 🎉');
+                    };
+                    reader.readAsDataURL(files[0]);
+                }
+            } else if (type === 'tops') {
+                const remaining = MAX_TOPS - state.tops.length;
+                const toAdd = files.slice(0, remaining);
+                
+                toAdd.forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        state.tops.push(e.target.result);
+                        updateUI();
+                    };
+                    reader.readAsDataURL(file);
+                });
+                
+                if (toAdd.length > 0) {
+                    showToast(`${toAdd.length} top(s) added! 👕`);
+                }
+            } else if (type === 'bottoms') {
+                const remaining = MAX_BOTTOMS - state.bottoms.length;
+                const toAdd = files.slice(0, remaining);
+                
+                toAdd.forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        state.bottoms.push(e.target.result);
+                        updateUI();
+                    };
+                    reader.readAsDataURL(file);
+                });
+                
+                if (toAdd.length > 0) {
+                    showToast(`${toAdd.length} bottom(s) added! 👖`);
+                }
+            }
+            
+            event.target.value = '';
+        }
+
+        // Update UI based on state
+        function updateUI() {
+            // Update counts
+            document.getElementById('bodyCount').textContent = `${state.body ? 1 : 0} / 1 uploaded`;
+            document.getElementById('topsCount').textContent = `${state.tops.length} / ${MAX_TOPS} uploaded`;
+            document.getElementById('bottomsCount').textContent = `${state.bottoms.length} / ${MAX_BOTTOMS} uploaded`;
+
+            // Update thumbnails
+            updateThumbnails('bodyThumbnails', state.body ? [state.body] : []);
+            updateThumbnails('topsThumbnails', state.tops);
+            updateThumbnails('bottomsThumbnails', state.bottoms);
+
+            // Enable/disable generate button
+            const canGenerate = state.tops.length > 0 && state.bottoms.length > 0;
+            document.getElementById('generateBtn').disabled = !canGenerate;
+
+            // Show/hide sections
+            const hasItems = state.tops.length > 0 || state.bottoms.length > 0;
+            document.getElementById('playground').style.display = hasItems ? 'block' : 'none';
+            document.getElementById('emptyState').style.display = hasItems || state.combinations.length > 0 ? 'none' : 'block';
+
+            // Update playground pools
+            updatePlayground();
+        }
+
+        // Update thumbnail grids
+        function updateThumbnails(containerId, images) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = images.map((img, idx) => 
+                `<img src="${img}" class="thumbnail" draggable="true" data-index="${idx}">`
+            ).join('');
+        }
+
+        // Update playground
+        function updatePlayground() {
+            const topsPool = document.getElementById('topsPool');
+            const bottomsPool = document.getElementById('bottomsPool');
+
+            topsPool.innerHTML = state.tops.map((img, idx) => 
+                `<img src="${img}" class="pool-item" draggable="true" 
+                    ondragstart="handleDragStart(event, 'top', ${idx})" 
+                    data-type="top" data-index="${idx}">`
+            ).join('');
+
+            bottomsPool.innerHTML = state.bottoms.map((img, idx) => 
+                `<img src="${img}" class="pool-item" draggable="true" 
+                    ondragstart="handleDragStart(event, 'bottom', ${idx})" 
+                    data-type="bottom" data-index="${idx}">`
+            ).join('');
+        }
+
+        // Drag and drop handlers
+        let dragData = null;
+
+        function handleDragStart(event, type, index) {
+            dragData = { type, index };
+            event.target.classList.add('dragging');
+            event.dataTransfer.effectAllowed = 'copy';
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+            event.currentTarget.classList.add('drag-over');
+        }
+
+        function handleDragLeave(event) {
+            event.currentTarget.classList.remove('drag-over');
+        }
+
+        function handleDrop(event, zoneType) {
+            event.preventDefault();
+            event.currentTarget.classList.remove('drag-over');
+            
+            if (!dragData) return;
+            
+            const { type, index } = dragData;
+            
+            // Check if drop zone matches item type
+            if ((zoneType === 'top' && type === 'top') || (zoneType === 'bottom' && type === 'bottom')) {
+                const zone = event.currentTarget;
+                const imgSrc = type === 'top' ? state.tops[index] : state.bottoms[index];
+                zone.innerHTML = `<img src="${imgSrc}" alt="${type}">`;
+            }
+            
+            dragData = null;
+            document.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'));
+        }
+
+        // Generate all combinations
+        function generateCombinations() {
+            if (state.tops.length === 0 || state.bottoms.length === 0) {
+                showToast('Please upload at least one top and one bottom! ⚠️');
+                return;
+            }
+
+            state.combinations = [];
+            let comboId = 0;
+
+            for (let t = 0; t < state.tops.length; t++) {
+                for (let b = 0; b < state.bottoms.length; b++) {
+                    const id = `combo_${comboId++}`;
+                    state.combinations.push({
+                        id,
+                        topIndex: t,
+                        bottomIndex: b,
+                        top: state.tops[t],
+                        bottom: state.bottoms[b]
+                    });
+                    
+                    // Initialize votes
+                    if (!state.votes[id]) {
+                        state.votes[id] = { up: 0, down: 0, userVote: null };
+                    }
+                }
+            }
+
+            renderCombinations();
+            updateLeaderboard();
+            showToast(`Generated ${state.combinations.length} combinations! 🎉`);
+        }
+
+        // Render combination cards
+        function renderCombinations() {
+            const grid = document.getElementById('combinationsGrid');
+            const section = document.getElementById('combinationsSection');
+            
+            section.style.display = 'block';
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('totalCombos').textContent = state.combinations.length;
+            
+            const sortedCombos = [...state.combinations].sort((a, b) => {
+                const scoreA = (state.votes[a.id]?.up || 0) - (state.votes[a.id]?.down || 0);
+                const scoreB = (state.votes[b.id]?.up || 0) - (state.votes[b.id]?.down || 0);
+                return scoreB - scoreA;
+            });
+
+            grid.innerHTML = sortedCombos.map((combo, idx) => {
+                const votes = state.votes[combo.id] || { up: 0, down: 0, userVote: null };
+                const score = votes.up - votes.down;
+                
+                let rankClass = '';
+                if (idx === 0 && score > 0) rankClass = 'gold';
+                else if (idx === 1 && score > 0) rankClass = 'silver';
+                else if (idx === 2 && score > 0) rankClass = 'bronze';
+
+                return `
+                    <div class="combo-card" style="animation-delay: ${idx * 0.05}s">
+                        ${rankClass ? `<div class="combo-rank ${rankClass}">#${idx + 1}</div>` : ''}
+                        <div class="combo-images">
+                            ${state.body ? `<img src="${state.body}" class="combo-body" alt="Body">` : ''}
+                            <div class="combo-outfit">
+                                <div class="combo-top">
+                                    <img src="${combo.top}" alt="Top ${combo.topIndex + 1}">
+                                </div>
+                                <div class="combo-divider"></div>
+                                <div class="combo-bottom">
+                                    <img src="${combo.bottom}" alt="Bottom ${combo.bottomIndex + 1}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="combo-footer">
+                            <div class="combo-id">Top ${combo.topIndex + 1} + Bottom ${combo.bottomIndex + 1}</div>
+                            <div class="vote-buttons">
+                                <button class="vote-btn upvote ${votes.userVote === 'up' ? 'active' : ''}" 
+                                    onclick="vote('${combo.id}', 'up')">
+                                    👍
+                                    ${votes.up > 0 ? `<span class="vote-count">${votes.up}</span>` : ''}
+                                </button>
+                                <button class="vote-btn downvote ${votes.userVote === 'down' ? 'active' : ''}" 
+                                    onclick="vote('${combo.id}', 'down')">
+                                    👎
+                                    ${votes.down > 0 ? `<span class="vote-count">${votes.down}</span>` : ''}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Update voted count
+            const votedCount = Object.values(state.votes).filter(v => v.userVote !== null).length;
+            document.getElementById('votedCombos').textContent = votedCount;
+        }
+
+        // Vote handler
+        function vote(comboId, voteType) {
+            if (!state.votes[comboId]) {
+                state.votes[comboId] = { up: 0, down: 0, userVote: null };
+            }
+
+            const currentVote = state.votes[comboId].userVote;
+
+            // If clicking same vote, remove it
+            if (currentVote === voteType) {
+                state.votes[comboId][voteType]--;
+                state.votes[comboId].userVote = null;
+            } else {
+                // Remove previous vote if exists
+                if (currentVote) {
+                    state.votes[comboId][currentVote]--;
+                }
+                // Add new vote
+                state.votes[comboId][voteType]++;
+                state.votes[comboId].userVote = voteType;
+            }
+
+            renderCombinations();
+            updateLeaderboard();
+        }
+
+        // Update leaderboard
+        function updateLeaderboard() {
+            const leaderboard = document.getElementById('leaderboard');
+            const list = document.getElementById('leaderboardList');
+
+            const sortedCombos = [...state.combinations]
+                .map(combo => ({
+                    ...combo,
+                    score: (state.votes[combo.id]?.up || 0) - (state.votes[combo.id]?.down || 0)
+                }))
+                .filter(combo => combo.score > 0)
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 5);
+
+            if (sortedCombos.length === 0) {
+                leaderboard.style.display = 'none';
+                return;
+            }
+
+            leaderboard.style.display = 'block';
+
+            list.innerHTML = sortedCombos.map((combo, idx) => {
+                const posClass = idx < 3 ? `pos-${idx + 1}` : 'pos-other';
+                const votes = state.votes[combo.id];
+                
+                return `
+                    <div class="leaderboard-item">
+                        <div class="leaderboard-position ${posClass}">${idx + 1}</div>
+                        <div class="leaderboard-preview">
+                            <img src="${combo.top}" alt="Top">
+                            <img src="${combo.bottom}" alt="Bottom">
+                        </div>
+                        <div class="leaderboard-info">
+                            <div class="leaderboard-combo-name">Top ${combo.topIndex + 1} + Bottom ${combo.bottomIndex + 1}</div>
+                            <div class="leaderboard-votes">👍 ${votes.up} · 👎 ${votes.down}</div>
+                        </div>
+                        <div class="leaderboard-score">+${combo.score}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Sort by votes
+        function sortByVotes() {
+            if (state.combinations.length === 0) {
+                showToast('Generate combinations first! ⚠️');
+                return;
+            }
+            renderCombinations();
+            showToast('Sorted by votes! 📊');
+        }
+
+        // Clear all
+        function clearAll() {
+            state.body = null;
+            state.tops = [];
+            state.bottoms = [];
+            state.combinations = [];
+            state.votes = {};
+            
+            document.getElementById('combinationsSection').style.display = 'none';
+            document.getElementById('leaderboard').style.display = 'none';
+            document.getElementById('combinationsGrid').innerHTML = '';
+            
+            // Reset drop zones
+            document.getElementById('topDropZone').innerHTML = '<div class="drop-placeholder">Drag a top here</div>';
+            document.getElementById('bottomDropZone').innerHTML = '<div class="drop-placeholder">Drag pants here</div>';
+            
+            updateUI();
+            showToast('All cleared! 🗑️');
+        }
+
+        // Toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize
+        updateUI();
+    </script>
+</body>
+</html>
